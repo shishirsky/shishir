@@ -1,0 +1,119 @@
+task 2
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .stopwatch {
+            background: yellow;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #time {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #ddd;
+        }
+
+        #lap-times {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .lap {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stopwatch">
+        <div id="time">00:00:00</div>
+        <button id="startBtn">Start</button>
+        <button id="pauseBtn">Pause</button>
+        <button id="resetBtn">Reset</button>
+        <button id="lapBtn">Lap</button>
+        <div id="lap-times"></div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let seconds = 0;
+        let isRunning = false;
+
+        const timeDisplay = document.getElementById('time');
+        const lapTimesContainer = document.getElementById('lap-times');
+
+        function updateTime() {
+            seconds++;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            timeDisplay.innerText = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+        }
+
+        function pad(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+            if (!isRunning) {
+                timerInterval = setInterval(updateTime, 1000);
+                isRunning = true;
+            }
+        });
+
+        document.getElementById('pauseBtn').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            isRunning = false;
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            seconds = 0;
+            isRunning = false;
+            timeDisplay.innerText = '00:00:00';
+            lapTimesContainer.innerHTML = ''; // Clear lap times
+        });
+
+        document.getElementById('lapBtn').addEventListener('click', () => {
+            if (isRunning) {
+                const lapTime = timeDisplay.innerText;
+                const lap = document.createElement('div');
+                lap.className = 'lap';
+                lap.innerText = `Lap: ${lapTime}`;
+                lapTimesContainer.appendChild(lap);
+            }
+        });
+    </script>
+
+</body>
+</html>
